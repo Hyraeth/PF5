@@ -31,3 +31,5 @@ let snow : symbol system =
        | P -> [Turn 60]
        | M -> [Turn (-60)])
   }
+
+let snow_word = iterate_n snow 0;;
