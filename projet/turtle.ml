@@ -66,3 +66,22 @@ let draw_sys (curpos : position) (cmd_l : command list) =
   Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y);
   let endpos = exec_cmd_list curpos cmd_l [] in
   Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y)
+;;
+
+let rec find_size curpos cmd_l xmax xmin ymax ymin mempos= 
+  match cmd_l with
+  | [] -> (xmax, xmin, ymax, ymin)
+  | x::xl -> let nextpos = calc_pos curpos x in 
+    match x with
+    | Store -> find_size curpos xl (xmax) (xmin) (ymax) (ymin) (curpos::mempos)
+    | Restore -> (
+      match mempos with
+      | [] -> failwith "No position to restore"
+      | m::ml -> find_size m xl (max xmax m.x) (min xmin m.x) (max ymax m.y) (min ymin m.y) ml
+    )
+    | _ -> find_size nextpos xl (max xmax nextpos.x) (min xmin nextpos.x) (max ymax nextpos.y) (min ymin nextpos.y) mempos
+;;
+
+let find_window_size curpos cmd_l = 
+  find_size curpos cmd_l curpos.x curpos.x curpos.y curpos.y []
+;;

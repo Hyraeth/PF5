@@ -23,3 +23,12 @@ val exec_cmd : position -> command -> position list -> position
 val exec_cmd_list : position -> command list -> position list -> position
 
 val draw_sys : position -> command list -> unit
+
+val find_size :
+  position ->
+  command list ->
+  float ->
+  float -> float -> float -> position list -> float * float * float * float
+
+val find_window_size :
+  position -> command list -> float * float * float * float

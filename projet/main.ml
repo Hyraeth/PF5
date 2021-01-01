@@ -31,9 +31,10 @@ let cmdline_options = [
 let extra_arg_action = fun s -> failwith ("Argument inconnu :"^s)
 
 let main () = 
-  create_window 1000 1000;
   let cmdl = interp_sys_n plant 3 in
-  draw_sys {x=100.; y=100.; a=90} cmdl;
+  let (xmax, xmin, ymax, ymin) = find_window_size {x=0.0; y=0.0; a=90} cmdl in
+  create_window (int_of_float (abs_float(xmax-.xmin))) (int_of_float (abs_float(ymax-.ymin)));
+  draw_sys {x=(abs_float xmin); y=(abs_float ymin); a=90} cmdl;
   synchronize();
   close_after_event ()
   
