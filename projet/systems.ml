@@ -50,3 +50,29 @@ let rec interp_word (word : 's word) (interp : 's -> Turtle.command list) : Turt
   | Seq l -> interp_word_list l
   | Branch b -> Store :: List.append (interp_word b interp) ([Restore])
 ;;
+
+let rec interp_n (word : 's word) (rules : 's rewrite_rules) (interp : 's -> Turtle.command list) (k : int) (n : int) : Turtle.command list =
+  let rec interp_word_list (l : 's word list) : Turtle.command list =
+    match l with
+    | [] -> failwith "Empty list"
+    | [x] -> interp_n (x) (rules) (interp) (k) (n)
+    | x :: xs -> List.append (interp_n (x) (rules) (interp) (k) (n))  (interp_word_list xs)
+  in
+  match word with
+  | Symb s -> (
+    if (k<n) then 
+      interp_n (rules s) (rules) (interp) (k+1) (n)
+    else 
+      interp s
+  )
+  | Seq l -> (
+    match l with
+    | [] -> failwith "Empty sequence"
+    | [x] -> interp_n (x) (rules) (interp) (k) (n)
+    | x::xl -> List.append (interp_n (x) (rules) (interp) (k) (n)) (interp_word_list xl)
+  )
+  | Branch b -> Store :: (List.append (interp_n (b) (rules) (interp) (k) (n)) ([Restore]))
+;;
+
+let interp_sys_n (sys : 's system) (n : int) : Turtle.command list =
+  interp_n sys.axiom sys.rules sys.interp 0 n;;

@@ -15,3 +15,9 @@ type position = {
 }
 
 (** Put here any type and function signatures concerning turtle *)
+
+val calc_pos : position -> command -> position
+
+val exec_cmd : position -> command -> position list -> position 
+
+val exec_cmd_list : position -> command list -> position list -> position
