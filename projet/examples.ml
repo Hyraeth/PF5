@@ -31,3 +31,22 @@ let snow : symbol system =
        | P -> [Turn 60]
        | M -> [Turn (-60)])
   }
+;;
+
+let plant : symbol system =
+  let a = Symb A in
+  let p = Symb P in
+  let m = Symb M in
+  {
+    axiom = a;
+    rules =
+      (function
+       | A -> Seq [a; Branch (Seq [p;a]); a; Branch (Seq [m;a]); a]
+       | s -> Symb s);
+    interp =
+      (function
+       | A -> [Line 30]
+       | P -> [Turn 25]
+       | M -> [Turn (-25)])
+  }
+  ;;

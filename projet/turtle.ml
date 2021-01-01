@@ -19,8 +19,14 @@ let degrees_to_rad degrees = (float_of_int degrees) *. (pi /. 180.);;
 
 let calc_pos (oldpos : position) (cmd : command) : position =
   match cmd with
-  | Line x -> let z = float_of_int x in {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a)); y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a)); a = oldpos.a}
-  | Move x -> let z = float_of_int x in {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a)); y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a)); a = oldpos.a}
+  | Line x -> let z = float_of_int x in 
+  {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a));
+   y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a));
+   a = oldpos.a}
+  | Move x -> let z = float_of_int x in 
+  {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a));
+   y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a));
+   a = oldpos.a}
   | Turn o -> {x = oldpos.x; y = oldpos.y; a = o + oldpos.a}
   | _ -> oldpos
 ;;
@@ -32,10 +38,11 @@ let exec_cmd (curpos : position) (cmd : command) (mempos : position list) : posi
   | Move x -> Graphics.moveto (int_of_float newpos.x) (int_of_float newpos.y); newpos
   | Turn a -> newpos
   | Store -> curpos
-  | Restore -> 
-    (match mempos with
+  | Restore -> (
+    match mempos with
     | [] -> failwith "No position to restore"
-    | m::ml -> Graphics.moveto (int_of_float m.x) (int_of_float m.y); m)
+    | m::ml -> Graphics.moveto (int_of_float m.x) (int_of_float m.y); m
+  )
 ;;
 
 let rec exec_cmd_list (curpos : position) (cmd_l : command list) (mempos : position list) =
@@ -44,12 +51,15 @@ let rec exec_cmd_list (curpos : position) (cmd_l : command list) (mempos : posit
   | [c] -> exec_cmd curpos c mempos
   | c::l -> 
     match c with
-    | Restore -> 
-      (match mempos with
+    | Restore -> (
+      match mempos with
       | [] -> failwith "No position to restore"
-      | m::ml -> let newpos = exec_cmd curpos c mempos in exec_cmd_list newpos l ml)
+      | m::ml -> let newpos = exec_cmd curpos c mempos in 
+        exec_cmd_list newpos l ml
+    )
     | Store -> exec_cmd_list curpos l (curpos::mempos)
-    | _ -> let newpos = exec_cmd curpos c mempos in exec_cmd_list newpos l mempos
+    | _ -> let newpos = exec_cmd curpos c mempos in 
+      exec_cmd_list newpos l mempos
 ;;
 
 let draw_sys (curpos : position) (cmd_l : command list) = 

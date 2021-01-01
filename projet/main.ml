@@ -31,9 +31,9 @@ let cmdline_options = [
 let extra_arg_action = fun s -> failwith ("Argument inconnu :"^s)
 
 let main () = 
-  create_window 500 500;
-  let snow_cmdl = interp_sys_n snow 2 in
-  draw_sys {x=100.; y=100.; a=0} snow_cmdl;
+  create_window 1000 1000;
+  let cmdl = interp_sys_n plant 3 in
+  draw_sys {x=100.; y=100.; a=90} cmdl;
   synchronize();
   close_after_event ()
   
