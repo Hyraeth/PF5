@@ -54,6 +54,7 @@ let rec interp_word word interp =
 ;;
 *)
 
+(** Inutile maintenant qu'on execute directement les commandes à la volée
 let rec interp_n word rules interp k n =
   let rec interp_word_list (l : 's word list) : Turtle.command list =
     match l with
@@ -80,6 +81,7 @@ let rec interp_n word rules interp k n =
 let interp_sys_n sys n =
   interp_n sys.axiom sys.rules sys.interp 0 n
 ;;
+*)
 
 let rec interp_direct_n word rules interp k n curpos mempos=
   let rec interp_word_list l curpos =
@@ -101,7 +103,7 @@ let rec interp_direct_n word rules interp k n curpos mempos=
     | [x] -> interp_direct_n x rules interp k n curpos mempos
     | x::xl -> let newpos = interp_direct_n x rules interp k n curpos mempos in interp_word_list xl newpos
   )
-  | Branch b -> interp_direct_n b rules interp k n curpos (curpos::mempos)
+  | Branch b -> let newpos = interp_direct_n b rules interp k n curpos (curpos::mempos) in exec_cmd newpos Restore (curpos::mempos)
 ;;
 
 let interp_direct_sys_n sys n curpos = 
@@ -135,10 +137,13 @@ let rec find_size_n word rules interp k n curpos mempos res =
     | x::xl -> (
       let (xmax1, xmin1, ymax1, ymin1, newpos1) = (find_size_n x rules interp k n curpos mempos res) in 
       let (xmax2, xmin2, ymax2, ymin2, newpos2) = (find_size_list xl newpos1) in 
-      Turtle.expand_bounds_pos (xmax1, xmin1, ymax1, ymin1, newpos1) (xmax2, xmin2, ymax2, ymin2,newpos2)
+      Turtle.expand_bounds_pos (xmax1, xmin1, ymax1, ymin1, newpos1) (xmax2, xmin2, ymax2, ymin2, newpos2)
     )
   )
-  | Branch b -> find_size_n b rules interp k n curpos (curpos::mempos) res
+  | Branch b -> 
+    let (xmax1, xmin1, ymax1, ymin1, newpos1) = find_size_n b rules interp k n curpos (curpos::mempos) res in
+    let newpos2 = exec_cmd newpos1 Restore (curpos::mempos) in
+    Turtle.expand_bounds_pos (xmax1, xmin1, ymax1, ymin1, newpos1) (newpos2.x, newpos2.x, newpos2.y, newpos2.y, newpos2)
 ;;
 
 let find_window_size_n curpos sys n= 

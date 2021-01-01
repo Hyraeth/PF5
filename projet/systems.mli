@@ -24,11 +24,13 @@ val iterate_n : 's system -> int -> 's word
 val interp_word : 's word -> ('s -> Turtle.command list) -> Turtle.command list
 *)
 
+(** 
 val interp_n :
   's word ->
   's rewrite_rules -> ('s -> Turtle.command list) -> int -> int -> Turtle.command list 
 
 val interp_sys_n : 's system -> int -> Turtle.command list
+*)
 
 val interp_direct_n :
   's word ->
