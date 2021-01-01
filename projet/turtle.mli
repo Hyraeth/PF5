@@ -12,6 +12,7 @@ type position = {
   x: float;        (** position x *)
   y: float;        (** position y *)
   a: int;        (** angle of the direction *)
+  s: float;      (** scale to keep the window to grow too big*)  
 }
 
 (** Put here any type and function signatures concerning turtle *)

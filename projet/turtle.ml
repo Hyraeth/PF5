@@ -9,7 +9,8 @@ type command =
 type position = {
   x: float;      (** position x *)
   y: float;      (** position y *)
-  a: int;      (** angle of the direction *)
+  a: int;        (** angle of the direction *)
+  s: float;      (** scale to keep the window to grow too big*)  
 }
 
 (** Put here any type and function implementations concerning turtle *)
@@ -20,14 +21,16 @@ let degrees_to_rad degrees = (float_of_int degrees) *. (pi /. 180.);;
 let calc_pos (oldpos : position) (cmd : command) : position =
   match cmd with
   | Line x -> let z = float_of_int x in 
-  {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a));
-   y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a));
-   a = oldpos.a}
+  {x = oldpos.x +. oldpos.s*.z*.(cos (degrees_to_rad oldpos.a));
+   y = oldpos.y +. oldpos.s*.z*.(sin (degrees_to_rad oldpos.a));
+   a = oldpos.a;
+   s = oldpos.s}
   | Move x -> let z = float_of_int x in 
-  {x = oldpos.x +. z*.(cos (degrees_to_rad oldpos.a));
-   y = oldpos.y +. z*.(sin (degrees_to_rad oldpos.a));
-   a = oldpos.a}
-  | Turn o -> {x = oldpos.x; y = oldpos.y; a = o + oldpos.a}
+  {x = oldpos.x +. oldpos.s*.z*.(cos (degrees_to_rad oldpos.a));
+   y = oldpos.y +. oldpos.s*.z*.(sin (degrees_to_rad oldpos.a));
+   a = oldpos.a;
+   s = oldpos.s}
+  | Turn o -> {x = oldpos.x; y = oldpos.y; a = o + oldpos.a; s = oldpos.s}
   | _ -> oldpos
 ;;
 
