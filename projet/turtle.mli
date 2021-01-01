@@ -11,7 +11,7 @@ type command =
 type position = {
   x: float;        (** position x *)
   y: float;        (** position y *)
-  a: int;          (** angle of the direction *)
+  a: int;        (** angle of the direction *)
 }
 
 (** Put here any type and function signatures concerning turtle *)
@@ -21,3 +21,5 @@ val calc_pos : position -> command -> position
 val exec_cmd : position -> command -> position list -> position 
 
 val exec_cmd_list : position -> command list -> position list -> position
+
+val draw_sys : position -> command list -> unit
