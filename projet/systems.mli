@@ -29,3 +29,25 @@ val interp_n :
   's rewrite_rules -> ('s -> Turtle.command list) -> int -> int -> Turtle.command list 
 
 val interp_sys_n : 's system -> int -> Turtle.command list
+
+val interp_direct_n :
+  's word ->
+  ('s -> 's word) ->
+  ('s -> Turtle.command list) -> int -> int -> Turtle.position -> Turtle.position list -> Turtle.position
+
+val interp_direct_sys_n : 's system -> int -> Turtle.position -> unit
+
+val find_size_n :
+  'a word ->
+  ('a -> 'a word) ->
+  ('a -> Turtle.command list) ->
+  int ->
+  int ->
+  Turtle.position ->
+  Turtle.position list ->
+  float * float * float * float * Turtle.position ->
+  float * float * float * float * Turtle.position
+
+val find_window_size_n :
+  Turtle.position -> 'a system -> int -> float * float * float * float * Turtle.position
+ 

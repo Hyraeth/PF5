@@ -71,20 +71,24 @@ let draw_sys (curpos : position) (cmd_l : command list) =
   Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y)
 ;;
 
-let rec find_size curpos cmd_l xmax xmin ymax ymin mempos= 
+let expand_bounds_pos (xmax1, xmin1, ymax1, ymin1, pos1) (xmax2, xmin2, ymax2, ymin2, pos2) = 
+  (max xmax1 xmax2, min xmin1 xmin2, max ymax1 ymax2, min ymin1 ymin2, pos2)
+;;
+
+let rec find_size_pos curpos cmd_l res mempos= 
   match cmd_l with
-  | [] -> (xmax, xmin, ymax, ymin)
+  | [] -> res
   | x::xl -> let nextpos = calc_pos curpos x in 
     match x with
-    | Store -> find_size curpos xl (xmax) (xmin) (ymax) (ymin) (curpos::mempos)
+    | Store -> find_size_pos curpos xl res (curpos::mempos)
     | Restore -> (
       match mempos with
       | [] -> failwith "No position to restore"
-      | m::ml -> find_size m xl (max xmax m.x) (min xmin m.x) (max ymax m.y) (min ymin m.y) ml
+      | m::ml -> find_size_pos m xl (expand_bounds_pos res (m.x, m.x, m.y, m.y, m)) ml
     )
-    | _ -> find_size nextpos xl (max xmax nextpos.x) (min xmin nextpos.x) (max ymax nextpos.y) (min ymin nextpos.y) mempos
+    | _ -> find_size_pos nextpos xl (expand_bounds_pos res (nextpos.x, nextpos.x, nextpos.y, nextpos.y, nextpos)) mempos
 ;;
 
 let find_window_size curpos cmd_l = 
-  find_size curpos cmd_l curpos.x curpos.x curpos.y curpos.y []
+  find_size_pos curpos cmd_l (curpos.x,curpos.x,curpos.y,curpos.y,curpos) []
 ;;
