@@ -84,6 +84,7 @@ let interp_sys_n sys n =
 *)
 
 let rec interp_direct_n word rules interp k n curpos mempos=
+Unix.sleepf 0.001;
   let rec interp_word_list l curpos =
     match l with
     | [] -> failwith "Empty list"
