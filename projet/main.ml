@@ -30,7 +30,7 @@ let cmdline_options = [
 let extra_arg_action = fun s -> failwith ("Argument inconnu :"^s)
 
 let main () = 
-  let iter_rank = 10 in
+  let iter_rank = 5 in
   let startpos = {x=0.0; y=0.0; a=45; s=1.0} in
   let (xmax, xmin, ymax, ymin, nextpos) = find_window_size_n startpos plant iter_rank in
   let height = (abs_float(ymax-.ymin)) in
