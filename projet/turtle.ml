@@ -10,7 +10,7 @@ type position = {
   x: float;      (** position x *)
   y: float;      (** position y *)
   a: int;        (** angle of the direction *)
-  s: float;      (** scale to keep the window to grow too big*)  
+  s: float;      (** scale to keep the window from growing too large*)  
 }
 
 (** Put here any type and function implementations concerning turtle *)
@@ -35,6 +35,7 @@ let calc_pos (oldpos : position) (cmd : command) : position =
 ;;
 
 let exec_cmd (curpos : position) (cmd : command) (mempos : position list) : position = 
+  Unix.sleepf 0.01;
   let newpos = calc_pos curpos cmd in
   match cmd with
   | Line x -> Graphics.lineto (int_of_float newpos.x) (int_of_float newpos.y); newpos

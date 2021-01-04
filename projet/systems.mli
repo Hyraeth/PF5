@@ -40,9 +40,9 @@ val interp_direct_n :
 val interp_direct_sys_n : 's system -> int -> Turtle.position -> unit
 
 val find_size_n :
-  'a word ->
-  ('a -> 'a word) ->
-  ('a -> Turtle.command list) ->
+  's word ->
+  ('s -> 's word) ->
+  ('s -> Turtle.command list) ->
   int ->
   int ->
   Turtle.position ->
@@ -51,5 +51,5 @@ val find_size_n :
   float * float * float * float * Turtle.position
 
 val find_window_size_n :
-  Turtle.position -> 'a system -> int -> float * float * float * float * Turtle.position
+  Turtle.position -> 's system -> int -> float * float * float * float * Turtle.position
  
