@@ -35,10 +35,9 @@ let calc_pos (oldpos : position) (cmd : command) : position =
 ;;
 
 let exec_cmd (curpos : position) (cmd : command) (mempos : position list) : position = 
-  Unix.sleepf 0.01;
   let newpos = calc_pos curpos cmd in
   match cmd with
-  | Line x -> Graphics.lineto (int_of_float newpos.x) (int_of_float newpos.y); newpos
+  | Line x -> Graphics.lineto (int_of_float newpos.x) (int_of_float newpos.y); Unix.sleepf 0.01; newpos
   | Move x -> Graphics.moveto (int_of_float newpos.x) (int_of_float newpos.y); newpos
   | Turn a -> newpos
   | Store -> curpos
