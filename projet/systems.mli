@@ -52,4 +52,17 @@ val find_size_n :
 
 val find_window_size_n :
   Turtle.position -> 's system -> int -> float * float * float * float * Turtle.position
+
+val read_lines : string -> string * string list * string list 
+
+val string_to_axiom : string -> char word 
+
+val string_to_rules : string list -> char -> char word 
+
+val string_to_turtle_cmd : string -> Turtle.command list 
+
+val string_to_interp : string list -> char -> Turtle.command list 
+
+val file_to_char_sys : string -> char system 
+
  

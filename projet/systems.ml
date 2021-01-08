@@ -84,7 +84,6 @@ let interp_sys_n sys n =
 *)
 
 let rec interp_direct_n word rules interp k n curpos mempos=
-Unix.sleepf 0.001;
   let rec interp_word_list l curpos =
     match l with
     | [] -> failwith "Empty list"
@@ -96,7 +95,7 @@ Unix.sleepf 0.001;
     if (k<n) then 
       interp_direct_n (rules s) rules interp (k+1) n curpos mempos
     else 
-      Turtle.exec_cmd_list curpos (interp s) mempos
+      (Turtle.exec_cmd_list curpos (interp s) mempos)
   )
   | Seq l -> (
     match l with
@@ -149,4 +148,76 @@ let rec find_size_n word rules interp k n curpos mempos res =
 
 let find_window_size_n curpos sys n= 
   find_size_n sys.axiom sys.rules sys.interp 0 n curpos [] (curpos.x,curpos.x,curpos.y,curpos.y, curpos)
+;;
+
+let read_lines file=
+  let in_ch = open_in file in
+  let rec readline axiom rules interp n =
+    let line = try input_line in_ch with End_of_file -> print_string "End file with \\n\n"; exit 1 in 
+    if (String.length line = 0 && (n+1) = 3) then (axiom, rules, interp)
+    else if (String.length line = 0) then readline axiom rules interp (n+1)
+    else if (line.[0] = '#') then readline axiom rules interp n
+    else (
+      if (n = 0) then readline (line) rules interp n
+      else if (n = 1) then readline axiom (line::rules) interp n
+      else readline axiom rules (line::interp) n
+    )
+    
+  in readline "tmp" [] [] 0
+;;
+
+let string_to_axiom string =
+  if (String.length string = 1) then Symb string.[0]
+  else (
+    let rec string_to_axiom_aux string n branch i = 
+      if (String.length string = n) then []
+      else(
+        match string.[n] with
+        | '[' -> string_to_axiom_aux string (n+1) true (n+1) 
+        | ']' -> 
+          let list_branch = (string_to_axiom_aux (String.sub string i (n-i)) 0 false i) in
+          if (List.length list_branch = 1) then (Branch (List.hd list_branch)) ::(string_to_axiom_aux string (n+1) false 0)
+          else (Branch (Seq list_branch)) ::(string_to_axiom_aux string (n+1) false 0)
+        | x -> 
+          if (branch = true) then string_to_axiom_aux string (n+1) branch i
+          else (Symb x) :: (string_to_axiom_aux string (n+1) branch i)
+      )
+    in
+    let word_list = string_to_axiom_aux string 0 false 0 in
+    if (List.length word_list = 1) then List.hd word_list
+    else Seq word_list
+  )
+;;
+
+let rec string_to_rules string_list c =
+  match string_list with
+  | [] -> Symb c
+  | x :: xs -> (
+    if (x.[0] = c) then string_to_axiom (String.sub x 2 (String.length x - 2))
+    else string_to_rules xs c
+  )
+;;
+
+let string_to_turtle_cmd string = 
+  match string.[0] with
+  | 'L' -> [Line (int_of_string (String.sub string 1 (String.length string - 1)))]
+  | 'M' -> [Move (int_of_string (String.sub string 1 (String.length string - 1)))]
+  | 'T' -> [Turn (int_of_string (String.sub string 1 (String.length string - 1)))]
+  | _ -> failwith "idk what this is dude"
+ ;;
+
+let rec string_to_interp string_list c =
+  match string_list with
+  | [] -> []
+  | x :: xs -> (
+    if (x.[0] = c) then string_to_turtle_cmd (String.sub x 2 (String.length x - 2))
+    else string_to_interp xs c
+  )
+;;
+
+let print_str string = print_string string;;
+
+let file_to_char_sys file = 
+  let (axiomstr, rulesstr, interpstr) = read_lines file in
+  {axiom = string_to_axiom axiomstr; rules = (string_to_rules rulesstr); interp = (string_to_interp interpstr)}
 ;;

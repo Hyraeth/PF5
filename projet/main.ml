@@ -30,9 +30,10 @@ let cmdline_options = [
 let extra_arg_action = fun s -> failwith ("Argument inconnu :"^s)
 
 let main () = 
-  let iter_rank = 6 in
-  let startpos = {x=0.0; y=0.0; a=90; s=1.0} in
-  let (xmax, xmin, ymax, ymin, nextpos) = find_window_size_n startpos plant iter_rank in
+  let sys = file_to_char_sys "examples/dragon.sys" in
+  let iter_rank = 15 in
+  let startpos = {x=0.0; y=0.0; a=45; s=1.0} in
+  let (xmax, xmin, ymax, ymin, nextpos) = find_window_size_n startpos sys iter_rank in
   let height = (abs_float(ymax-.ymin)) in
   let width = (abs_float(xmax-.xmin)) in
   let scale = if (max height width) > 1000.0 then (1000.0)/.(max height width) else 1.0 in
@@ -41,7 +42,7 @@ let main () =
   let new_startpos = {x=scale*.(abs_float xmin)+.50.0; y=scale*.(abs_float ymin)+.50.0; a=startpos.a; s=scale} in
   create_window (new_width) (new_height);
   Unix.sleepf 0.1;
-  interp_direct_sys_n plant iter_rank new_startpos;
+  interp_direct_sys_n sys iter_rank new_startpos;
   synchronize();
   close_after_event ()
   
