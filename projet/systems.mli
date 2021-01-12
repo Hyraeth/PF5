@@ -35,9 +35,9 @@ val interp_sys_n : 's system -> int -> Turtle.command list
 val interp_direct_n :
   's word ->
   ('s -> 's word) ->
-  ('s -> Turtle.command list) -> int -> int -> Turtle.position -> Turtle.position list -> Turtle.position
+  ('s -> Turtle.command list) -> int -> int -> Turtle.position -> Turtle.position list -> float ->Turtle.position
 
-val interp_direct_sys_n : 's system -> int -> Turtle.position -> unit
+val interp_direct_sys_n : 's system -> int -> Turtle.position -> int -> unit
 
 val find_size_n :
   's word ->

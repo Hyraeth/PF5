@@ -83,32 +83,34 @@ let interp_sys_n sys n =
 ;;
 *)
 
-let rec interp_direct_n word rules interp k n curpos mempos=
+let rec interp_direct_n word rules interp k n curpos mempos anim=
   let rec interp_word_list l curpos =
     match l with
     | [] -> failwith "Empty list"
-    | [x] -> interp_direct_n x rules interp k n curpos mempos
-    | x::xs -> let newpos = interp_direct_n x rules interp k n curpos mempos in interp_word_list xs newpos
+    | [x] -> interp_direct_n x rules interp k n curpos mempos anim
+    | x::xs -> let newpos = interp_direct_n x rules interp k n curpos mempos anim in interp_word_list xs newpos
   in
   match word with
   | Symb s -> (
     if (k<n) then 
-      interp_direct_n (rules s) rules interp (k+1) n curpos mempos
+      interp_direct_n (rules s) rules interp (k+1) n curpos mempos anim
     else 
-      (Turtle.exec_cmd_list curpos (interp s) mempos)
+      if (anim>0.0) then (Unix.sleepf anim; Turtle.exec_cmd_list curpos (interp s) mempos)
+      else Turtle.exec_cmd_list curpos (interp s) mempos
   )
   | Seq l -> (
     match l with
     | [] -> failwith "Empty sequence"
-    | [x] -> interp_direct_n x rules interp k n curpos mempos
-    | x::xl -> let newpos = interp_direct_n x rules interp k n curpos mempos in interp_word_list xl newpos
+    | [x] -> interp_direct_n x rules interp k n curpos mempos anim
+    | x::xl -> let newpos = interp_direct_n x rules interp k n curpos mempos anim in interp_word_list xl newpos 
   )
-  | Branch b -> let newpos = interp_direct_n b rules interp k n curpos (curpos::mempos) in exec_cmd newpos Restore (curpos::mempos)
+  | Branch b -> let newpos = interp_direct_n b rules interp k n curpos (curpos::mempos) anim in exec_cmd newpos Restore (curpos::mempos)
 ;;
 
-let interp_direct_sys_n sys n curpos = 
+let interp_direct_sys_n sys n curpos anim = 
+  let sleep_time = if (anim>0) then (1.0 /. 10.0 ** (float_of_int anim)) else 0.0 in
   Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y);
-  let newpos = interp_direct_n sys.axiom sys.rules sys.interp 0 n curpos [] in
+  let newpos = interp_direct_n sys.axiom sys.rules sys.interp 0 n curpos [] sleep_time in
   Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y);
 ;;
 
