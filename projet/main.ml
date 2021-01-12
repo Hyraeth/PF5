@@ -29,18 +29,18 @@ let close_after_event () =
 let usage = (* Entete du message d'aide pour --help *)
   "Interpretation de L-systemes et dessins fractals"
 
-let set_sys sys = file := ("examples/"^sys)
+let set_sys sys = file := sys
 let set_iter n = if (n>=0) then iter := n else failwith ("Nombre d'iteration negatif")
 let set_maxsize n = if (n>=0) then  maxsize := n else failwith ("Taille negative")
 let set_angle n = angle := n
 let set_anim_speed n = if (n>=0) then anim := (min n 10) else anim_enable := false
 
 let cmdline_options = [
-("--sys" , Arg.String set_sys, "L-system to display");
+("--sys" , Arg.String set_sys, "path to the L-system to display");
 ("--n" , Arg.Int set_iter, "Number of iteration");
-("--size" , Arg.Int set_maxsize, "Maximum size for the window");
-("--angle" , Arg.Int set_angle, "Angle for the L-system");
-("--animation" , Arg.Int set_anim_speed, "Animation speed from 1 to 10, 0 for fastest drawing speed, -1 for no animations");
+("--size" , Arg.Int set_maxsize, "Maximum size for the edges of the window");
+("--angle" , Arg.Int set_angle, "Angle for drawing the L-system");
+("--animation" , Arg.Int set_anim_speed, "Animation speed from 1 to 10, 0 for no lag when drawing, -1 for no animations");
 ]
 
 let extra_arg_action = fun s -> failwith ("Argument inconnu :"^s)

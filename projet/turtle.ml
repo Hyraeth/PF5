@@ -30,7 +30,8 @@ let calc_pos (oldpos : position) (cmd : command) : position =
    y = oldpos.y +. oldpos.s*.z*.(sin (degrees_to_rad oldpos.a));
    a = oldpos.a;
    s = oldpos.s}
-  | Turn o -> {x = oldpos.x; y = oldpos.y; a = o + oldpos.a; s = oldpos.s}
+  | Turn o -> 
+  {x = oldpos.x; y = oldpos.y; a = o + oldpos.a; s = oldpos.s}
   | _ -> oldpos
 ;;
 
