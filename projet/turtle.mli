@@ -23,8 +23,6 @@ val exec_cmd : position -> command -> position list -> position
 
 val exec_cmd_list : position -> command list -> position list -> position
 
-val draw_sys : position -> command list -> unit
-
 val expand_bounds_pos :
   'a * 'b * 'c * 'd * 'e -> 'a * 'b * 'c * 'd * 'f -> 'a * 'b * 'c * 'd * 'f 
 
@@ -34,5 +32,3 @@ val find_size_pos :
   float * float * float * float * position ->
   position list -> float * float * float * float * position
 
-val find_window_size :
-  position -> command list -> float * float * float * float * position

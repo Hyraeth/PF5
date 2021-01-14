@@ -36,7 +36,7 @@ val find_window_size_n :
 
 val read_lines : string -> string * string list * string list 
 
-val string_to_axiom : string -> char word 
+val string_to_char_word : string -> char word 
 
 val string_to_rules : string list -> char -> char word 
 

@@ -36,9 +36,9 @@ Dans le fichier turtle.ml se trouve les fonctions pour tracer un liste de comman
 La majorité du travail s'est fait le jour du premier commit qui était juste après la deadline pour le projet de programmation C.
 Le reste : Parser pour lire les fichiers .sys et la gestion des arguments de la ligne de commande s'est fait pendant le temps libre entre les examens.
 Le projet était pas très dur et très largement faisable sur une journée.
-J'avais totalement oublié qu'il y avait un projet en OCaml jusqu'à mi-décembre du coup aucun travail sur le projet avant le confinement. Mais les TPs ont été fait.
 
 ## Misc
 
-Si j'étais pas si fatigué et s'il avait plus de temps j'aurais voulu essayer de faire les fractals en 3D avec projection mais il faudra que je remanie tout le code.
+S'il avait plus de temps j'aurais voulu essayer de faire les fractals en 3D avec projection mais il faudra que je remanie tout le code.
 Le format des fichiers .sys a été changé pour faciliter la lecture : il faut finir le fichier par un retour à la ligne.
+Ne pas dépasser la limite de 80 lines était difficile.

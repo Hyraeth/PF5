@@ -18,6 +18,7 @@ type position = {
 let pi = 4. *. atan 1.
 let degrees_to_rad degrees = (float_of_int degrees) *. (pi /. 180.);;
 
+(**calcul la prochaine position en fonction de l'ancienne et d'une commande *)
 let calc_pos (oldpos : position) (cmd : command) : position =
   match cmd with
   | Line x -> let z = float_of_int x in 
@@ -35,6 +36,7 @@ let calc_pos (oldpos : position) (cmd : command) : position =
   | _ -> oldpos
 ;;
 
+(**exécute la commande en fonciton de la position actuelle et d'un historique de position pour la restoration*)
 let exec_cmd (curpos : position) (cmd : command) (mempos : position list) : position = 
   let newpos = calc_pos curpos cmd in
   match cmd with
@@ -49,6 +51,7 @@ let exec_cmd (curpos : position) (cmd : command) (mempos : position list) : posi
   )
 ;;
 
+(** Execution de la liste de commande*)
 let rec exec_cmd_list (curpos : position) (cmd_l : command list) (mempos : position list) =
   match cmd_l with
   | [] -> failwith "Command list empty"
@@ -66,16 +69,11 @@ let rec exec_cmd_list (curpos : position) (cmd_l : command list) (mempos : posit
       exec_cmd_list newpos l mempos
 ;;
 
-let draw_sys (curpos : position) (cmd_l : command list) = 
-  Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y);
-  let endpos = exec_cmd_list curpos cmd_l [] in
-  Graphics.moveto (int_of_float curpos.x) (int_of_float curpos.y)
-;;
-
 let expand_bounds_pos (xmax1, xmin1, ymax1, ymin1, pos1) (xmax2, xmin2, ymax2, ymin2, pos2) = 
   (max xmax1 xmax2, min xmin1 xmin2, max ymax1 ymax2, min ymin1 ymin2, pos2)
 ;;
 
+(**calcule les nouvelles bornes à partie des anciennes bornes (res) d'une liste de commande et d'une position initiale *)
 let rec find_size_pos curpos cmd_l res mempos= 
   match cmd_l with
   | [] -> res
@@ -90,6 +88,3 @@ let rec find_size_pos curpos cmd_l res mempos=
     | _ -> find_size_pos nextpos xl (expand_bounds_pos res (nextpos.x, nextpos.x, nextpos.y, nextpos.y, nextpos)) mempos
 ;;
 
-let find_window_size curpos cmd_l = 
-  find_size_pos curpos cmd_l (curpos.x,curpos.x,curpos.y,curpos.y,curpos) []
-;;
